@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
+const { Redis } = require('@upstash/redis');
 
+const app = express();
 // RUTA DE PRUEBA (Para que UptimeRobot sepa que estamos vivos)
 app.get('/', (req, res) => {
     res.send('🤖 Julio Grondona (bot) está funcionando correctamente.');
@@ -16,7 +17,14 @@ app.listen(port, () => {
 
 const TelegramBot = require('node-telegram-bot-api');
 const cron = require('node-cron');
-const fs = require('fs');
+//const fs = require('fs');
+
+// --- CONFIGURACIÓN REDIS Y TELEGRAM ---
+// Usamos variables de entorno (las configurarás en Render después)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 // --- CONFIGURACIÓN ---
 const token = process.env.TELEGRAM_TOKEN;
@@ -34,6 +42,37 @@ let datos = {
     grupoId: null // <--- NUEVO: Aquí guardaremos la dirección del grupo
 };
 
+// --- FUNCIÓN PARA GUARDAR EN LA NUBE ---
+async function guardarDatos() {
+    try {
+        await redis.set('datos_partido', datos);
+        // console.log('Datos guardados en Redis');
+    } catch (error) {
+        console.error('Error guardando en Redis:', error);
+    }
+}
+
+// --- FUNCIÓN PARA CARGAR AL INICIO ---
+async function cargarDatos() {
+    try {
+        const datosNube = await redis.get('datos_partido');
+        if (datosNube) {
+            datos = datosNube;
+            console.log("✅ Datos cargados desde la nube correctamente.");
+        } else {
+            console.log("🆕 No hay datos en la nube. Iniciando desde cero.");
+            guardarDatos();
+        }
+    } catch (error) {
+        console.error("Error cargando Redis:", error);
+    }
+}
+
+// Ejecutamos la carga apenas arranca el script
+cargarDatos();
+
+
+/*
 // Cargar datos al iniciar si existen
 if (fs.existsSync(ARCHIVO_DB)) {
     datos = JSON.parse(fs.readFileSync(ARCHIVO_DB));
@@ -44,6 +83,7 @@ if (fs.existsSync(ARCHIVO_DB)) {
 function guardarDatos() {
     fs.writeFileSync(ARCHIVO_DB, JSON.stringify(datos, null, 2));
 }
+*/
 
 // --- COMANDOS ---
 
