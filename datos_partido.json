@@ -1,0 +1,43 @@
+{
+  "jugaronSemanaPasada": [
+    823534258,
+    8332373102,
+    1136066210,
+    6518382163,
+    8539928955,
+    1190053669,
+    1535690619,
+    6179314158,
+    5564819377
+  ],
+  "convocados": [
+    {
+      "id": 1136066210,
+      "nombre": "Nahuel Mangano"
+    },
+    {
+      "id": 5564819377,
+      "nombre": "Andres "
+    },
+    {
+      "id": 8539928955,
+      "nombre": "Ignacio Cucchi"
+    },
+    {
+      "id": 823534258,
+      "nombre": "Juan Manuel Antonio"
+    }
+  ],
+  "reserva": [
+    {
+      "id": 8204860029,
+      "nombre": "Christian Uzal"
+    },
+    {
+      "id": 8589766135,
+      "nombre": "Martin Carrizo"
+    }
+  ],
+  "listaCerrada": false,
+  "grupoId": -1003472279503
+}
