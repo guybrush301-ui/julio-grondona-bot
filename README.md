@@ -30,7 +30,6 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
 
 3. Configura el token del bot en `bot.js`:
    - Obtén un token de [@BotFather](https://t.me/botfather) en Telegram.
-   - Reemplaza `'8317594779:AAE3pcpzcIK0BmSHw8R4-JRisplsiJZYNkc'` con tu token.
 
 ## Configuración
 
