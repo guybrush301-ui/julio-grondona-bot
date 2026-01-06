@@ -19,7 +19,6 @@ const cron = require('node-cron');
 const fs = require('fs');
 
 // --- CONFIGURACIÓN ---
-//const token = '8317594779:AAE3pcpzcIK0BmSHw8R4-JRisplsiJZYNkc'; // <--- PEGA TU TOKEN
 const token = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(token, {polling: true});
 const MAX_CUPOS = 18;
