@@ -5,6 +5,7 @@ const State = require('./src/core/state');
 const registerCommands = require('./src/handlers/commands');
 const registerActions = require('./src/handlers/actions');
 const registerCron = require('./src/handlers/cron');
+const registerEasterEggs = require('./src/handlers/eastereggs');
 
 // 1. Configurar Express (UptimeRobot)
 const app = express();
@@ -25,6 +26,7 @@ async function iniciarBot() {
     registerCommands();
     registerActions();
     registerCron();
+    registerEasterEggs();
 
     console.log('🤖 JULIO GRONDONA BOT UP & RUNNING');
 }

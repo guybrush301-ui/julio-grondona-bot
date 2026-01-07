@@ -1,7 +1,15 @@
 const TelegramBot = require('node-telegram-bot-api');
 const config = require('../config');
 
-// Creamos la instancia aquí para importarla donde la necesitemos
-const bot = new TelegramBot(config.TELEGRAM_TOKEN, { polling: true });
+const options = {
+    polling: true,
+    request: {
+        agentOptions: {
+            keepAlive: true,
+            family: 4 // <--- ESTO SOLUCIONA LA IMAGEN 1
+        }
+    }
+};
+const bot = new TelegramBot(config.TELEGRAM_TOKEN, options);
 
 module.exports = bot;

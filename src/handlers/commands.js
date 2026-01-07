@@ -122,7 +122,7 @@ module.exports = () => {
     
     // Ayuda para que sepan como usuarlo
     bot.onText(/\/ficha/, (msg) => {
-        bot.sendMessage(msg.chat.id, "📝 *CÓMO CARGAR TU FICHA:*\n\nEscribí:\n`/soy POSICION POSICION NIVEL`\n\nEjemplos:\n`/soy DEF VOL 3` (Defensor/Volante, 3 puntos)\n`/soy DEL VOL 5` (Delantero/Volante, Crack)\n\n_Opciones: DEF, VOL, DEL. Nivel 1 al 5._", {parse_mode: 'Markdown'});
+        bot.sendMessage(msg.chat.id, "📝 *CÓMO CARGAR TU FICHA:*\n\nEscribí:\n`/soy POSICION POSICION NIVEL`\n\nEjemplos:\n`/soy DEF VOL 3` (Defensor/Volante, 3 puntos)\n`/soy DEL VOL 5` (Delantero/Volante, Crack)\n\n_Opciones: ARQ, DEF, VOL, DEL. Nivel 1 al 5._", {parse_mode: 'Markdown'});
     });
 
 

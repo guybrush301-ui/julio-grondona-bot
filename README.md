@@ -12,6 +12,9 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
 - **Cierre Automático**: Sábado a las 18:00, completa cupos con reserva.
 - **Apertura Automática**: Jueves a las 8:00, abre inscripciones.
 - **Reset Automático**: Domingo a las 21:00, guarda historial y limpia listas.
+- **Perfiles de Jugadores**: Registro de posiciones (ARQ, DEF, VOL, DEL) y nivel (1-5).
+- **Generador de Equipos**: Balance automático de equipos basado en posiciones y niveles.
+- **Easter Eggs**: Respuestas automáticas con frases de Julio Grondona.
 - **Comandos de Admin**: Para gestión manual y configuración.
 - **Interfaz Interactiva**: Botones para unirse, darse de baja y actualizar la vista.
 - **Persistencia**: Usa Redis (Upstash) para almacenar datos.
@@ -66,6 +69,8 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
   - ⚽ JUEGO: Inscribirse al partido.
   - ❌ BAJA: Darse de baja.
   - 🔄 VER LISTA: Refrescar la vista de la lista.
+- `/soy POS1 POS2 NIVEL`: Registrar tu perfil (ej: `/soy DEF VOL 3`).
+- `/ficha`: Ver ayuda para registrar perfil.
 
 #### Para Admins
 - `/start [número]`: Configura el grupo (solo admins). Opcionalmente cambia el cupo máximo.
@@ -73,11 +78,30 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
 - `/vip <ID>`: Agrega un ID de usuario a la lista de prioridad (jugaron semana pasada).
 - `/agendar <Nombre>`: Agrega un jugador manualmente a la lista.
 - `/sacar <Nombre>`: Elimina un jugador manualmente por nombre.
+- `/equipos`: Genera equipos balanceados automáticamente.
 
 ### Funcionalidades Automáticas
 - **Jueves 08:00**: Envía mensaje de apertura y muestra menú.
 - **Sábado 18:00**: Cierra listas y completa cupos con reservas.
 - **Domingo 21:00**: Resetea ciclo, guardando historial de quienes jugaron.
+
+### Perfiles de Jugadores
+Cada jugador puede registrar su perfil con:
+- **Posición 1**: Principal (ARQ, DEF, VOL, DEL).
+- **Posición 2**: Secundaria.
+- **Nivel**: Del 1 al 5 (habilidad).
+
+Ejemplo: `/soy DEF VOL 3` (Defensor/Volante, nivel 3).
+
+### Generador de Equipos
+El comando `/equipos` (solo admins) crea equipos balanceados:
+- Asigna arqueros automáticamente (prioriza quienes pusieron ARQ).
+- Distribuye defensores, volantes y delanteros equilibradamente.
+- Calcula nivel promedio de cada equipo.
+- Si faltan arqueros, rota posiciones.
+
+### Easter Eggs
+El bot responde automáticamente con frases célebres de Julio Grondona cuando detecta palabras relacionadas con fútbol, corrupción, etc. (ej: "ladron", "afa", "penal", "julio").
 
 ## Estructura de Archivos
 ```
@@ -93,26 +117,30 @@ julio-grondona-bot/
 │   ├── handlers/
 │   │   ├── actions.js       # Manejadores de botones inline
 │   │   ├── commands.js      # Manejadores de comandos de texto
-│   │   └── cron.js          # Tareas programadas automáticas
+│   │   ├── cron.js          # Tareas programadas automáticas
+│   │   └── eastereggs.js    # Respuestas automáticas con frases
 │   ├── services/
 │   │   ├── bot.js           # Instancia del bot de Telegram
 │   │   └── redis.js         # Conexión a Redis
 │   └── utils/
-│       └── helpers.js       # Funciones auxiliares (menú, admins)
+│       ├── grondona_data.js # Triggers y frases para easter eggs
+│       ├── helpers.js       # Funciones auxiliares (menú, admins)
+│       └── teammaker.js     # Generador de equipos balanceados
 ```
 
 ## Dependencias
 - `@upstash/redis`: Cliente Redis para Upstash.
 - `dotenv`: Carga variables de entorno.
 - `express`: Servidor web para uptime.
+- `jest`: Framework de testing (dev).
 - `node-cron`: Programación de tareas.
 - `node-telegram-bot-api`: API de Telegram.
 
-## Próximas Funcionalidades (TODO)
-- Agregar posiciones en la cancha para cada jugador (ej: delantero, defensa).
-- Sistema de puntuación de 1 a 5 para equilibrar equipos.
-- Formación automática de equipos parejos (4-3-2 sin arquero).
-- Cada jugador debería tener dos posiciones posibles.
+## Tests
+Ejecuta los tests con:
+```bash
+npm test
+```
 
 ## Contribución
 Si quieres contribuir:
