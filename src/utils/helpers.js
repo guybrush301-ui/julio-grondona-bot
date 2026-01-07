@@ -15,7 +15,7 @@ const Helpers = {
         let msg = `⚽*COMUNICADO AFA*💍\n\n`;        
         if (!datos.listaCerrada) {
             msg += `*Señores, se abren las inscripciones.* Acomódense. Recuerden: _Todo Pasa_, menos las ganas de jugar.\n\n`;
-            msg += `⚠️ *Fase de Inscripción con prioridad* cierra próximo sábado a las 16:00)⚠️\n\n`;
+            msg += `⚠️ *Fase de Inscripción con prioridad* cierra próximo sábado a las 18:00)⚠️\n\n`;
             msg += `_Si jugaste la semana pasada, entrás directo a Convocados._\n\n`;
         } else {
             msg += `🔒 *Listas Cerradas* (Orden de llegada)\n\n`;

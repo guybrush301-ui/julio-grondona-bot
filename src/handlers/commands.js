@@ -62,14 +62,12 @@ module.exports = () => {
     });
 
     // /agendar Nombre
-    // /agendar Nombre (ACTUALIZADO CON CUPO DINÁMICO)
     bot.onText(/\/agendar (.+)/, async (msg, match) => {
         if (await Helpers.esAdmin(msg.chat.id, msg.from.id)) {
             const nombre = match[1];
             const usuario = { id: 'manual_' + Date.now(), nombre: nombre + " ✏️" };
             const datos = State.get();
 
-            // CAMBIO AQUÍ: Usamos datos.cupoMaximo en lugar de config.MAX_CUPOS
             if (datos.convocados.length < datos.cupoMaximo) {
                 State.agregarConvocado(usuario);
             } else {
