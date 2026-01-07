@@ -1,6 +1,7 @@
 const bot = require('../services/bot');
 const State = require('../core/state');
 const Helpers = require('../utils/helpers');
+const TeamMaker = require('../utils/teammaker');
 
 module.exports = () => {
     
@@ -99,4 +100,70 @@ module.exports = () => {
             }
         }
     });
+
+
+    // COMANDO: /soy DEF VOL 4
+    bot.onText(/\/soy (ARQ|DEF|VOL|DEL) (ARQ|DEF|VOL|DEL) ([1-5])/, async (msg, match) => {
+        const chatId = msg.chat.id;
+        const userId = msg.from.id;
+        const nombre = msg.from.first_name;
+
+        const pos1 = match[1].toUpperCase();
+        const pos2 = match[2].toUpperCase();
+        const nivel = parseInt(match[3]);
+
+        State.guardarPerfil(userId, nombre, pos1, pos2, nivel);
+        State.save();
+
+        const respuesta = `✅ *Ficha Actualizada*\n👤 ${nombre}\n🛡️ Puesto 1: ${pos1}\n⚔️ Puesto 2: ${pos2}\n⭐ Nivel: ${nivel}`;
+        bot.sendMessage(chatId, respuesta, { parse_mode: 'Markdown' });
+    });
+    
+    
+    // Ayuda para que sepan como usuarlo
+    bot.onText(/\/ficha/, (msg) => {
+        bot.sendMessage(msg.chat.id, "📝 *CÓMO CARGAR TU FICHA:*\n\nEscribí:\n`/soy POSICION POSICION NIVEL`\n\nEjemplos:\n`/soy DEF VOL 3` (Defensor/Volante, 3 puntos)\n`/soy DEL VOL 5` (Delantero/Volante, Crack)\n\n_Opciones: DEF, VOL, DEL. Nivel 1 al 5._", {parse_mode: 'Markdown'});
+    });
+
+
+    // COMANDO: /equipos
+    // Genera los equipos manualmente cuando el admin quiera
+    bot.onText(/\/equipos/, async (msg) => {
+        const chatId = msg.chat.id;
+        
+        // 1. Solo admins pueden generar equipos (para no spamear)
+        if (await Helpers.esAdmin(chatId, msg.from.id)) {
+            const datos = State.get();
+
+            // 2. Validar cantidad mínima (podés cambiar el 10)
+            if (datos.convocados.length < 2) {
+                return bot.sendMessage(chatId, "⚠️ Nooo flaco, te faltan jugadores para armar equipos decentes.");
+            }
+
+            // 3. Usar el TeamMaker
+            const match = TeamMaker.armarEquipos(datos.convocados);
+            
+            // 4. Armar el mensaje
+            let respuesta = `⚖️ *EQUIPOS CONFIRMADOS* ⚖️\n`;
+            respuesta += `_Firmado: La AFA_\n\n`;
+
+            // --- AGREGAMOS EL MENSAJE DE ARQUEROS AQUÍ ---
+            if (match.mensaje) {
+                respuesta += `${match.mensaje}\n\n`;
+            }
+
+            respuesta += `⚪ *EQUIPO A* (Nivel: ${match.nivelA})\n`;
+            match.equipoA.forEach(j => respuesta += `• ${j.nombre} (${j.pos1})\n`);
+
+            respuesta += `\n⚫ *EQUIPO B* (Nivel: ${match.nivelB})\n`;
+            match.equipoB.forEach(j => respuesta += `• ${j.nombre} (${j.pos1})\n`);
+
+            // 5. Enviar
+            bot.sendMessage(chatId, respuesta, { parse_mode: 'Markdown' });
+
+        } else {
+            bot.sendMessage(chatId, "🤌 ¿Quién sos vos para armar los equipos? Tomatela de acá.");
+        }
+    });
+
 };
