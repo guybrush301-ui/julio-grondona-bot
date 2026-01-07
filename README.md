@@ -71,6 +71,7 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
   - 🔄 VER LISTA: Refrescar la vista de la lista.
 - `/soy POS1 POS2 NIVEL`: Registrar tu perfil (ej: `/soy DEF VOL 3`).
 - `/ficha`: Ver ayuda para registrar perfil.
+- `/help` o `/ayuda`: Mostrar manual de reglamento.
 
 #### Para Admins
 - `/start [número]`: Configura el grupo (solo admins). Opcionalmente cambia el cupo máximo.
@@ -79,6 +80,7 @@ Este bot permite a un grupo de amigos organizar partidos de fútbol de forma aut
 - `/agendar <Nombre>`: Agrega un jugador manualmente a la lista.
 - `/sacar <Nombre>`: Elimina un jugador manualmente por nombre.
 - `/equipos`: Genera equipos balanceados automáticamente.
+- `/force_cierre`: Cierra la lista y sube reservas inmediatamente.
 
 ### Funcionalidades Automáticas
 - **Jueves 08:00**: Envía mensaje de apertura y muestra menú.

@@ -47,6 +47,24 @@ module.exports = () => {
         }
     });
 
+
+    // /force_cierre
+    bot.onText(/\/force_cierre/, async (msg) => {
+        if (await Helpers.esAdmin(msg.chat.id, msg.from.id)) {
+            const datos = State.get();
+            
+            // COPIAR ACÁ LA LÓGICA QUE ESTÁ DENTRO DEL CRON
+            State.setListaCerrada(true);
+            const cuposLibres = datos.cupoMaximo - datos.convocados.length;
+            if (cuposLibres > 0 && datos.reserva.length > 0) {
+                State.moverReservaAConvocados(cuposLibres);
+            }
+            State.save();            
+            bot.sendMessage(msg.chat.id, "🧪 *TEST: CIERRE EJECUTADO*", {parse_mode: 'Markdown'});
+
+        }
+    });
+
     // /vip ID
     bot.onText(/\/vip (.+)/, async (msg, match) => {
         if (await Helpers.esAdmin(msg.chat.id, msg.from.id)) {
@@ -164,6 +182,39 @@ module.exports = () => {
         } else {
             bot.sendMessage(chatId, "🤌 ¿Quién sos vos para armar los equipos? Tomatela de acá.");
         }
+    });
+
+
+    // COMANDO: /help o /ayuda
+    bot.onText(/\/help|\/ayuda/, async (msg) => {
+        const chatId = msg.chat.id;
+        const esAdmin = await Helpers.esAdmin(chatId, msg.from.id);
+
+        let respuesta = `📖 *MANUAL DE REGLAMENTO* 📖\n`;
+        respuesta += `_Todo lo que necesitás saber para no quedarte afuera._\n\n`;
+
+        // --- SECCIÓN JUGADORES (Visible para todos) ---
+        respuesta += `👤 *PARA LOS JUGADORES*\n`;
+        respuesta += `• \`/soy P1 P2 N\` » Cargá tu ficha técnica.\n`;
+        respuesta += `   _Ej: /soy DEF VOL 4 (Defensor/Volante, Nivel 4)_\n`;
+        respuesta += `• \`/ficha\` » Ver ayuda detallada sobre posiciones.\n`;
+        respuesta += `• \`/help\` » Muestra este mensaje.\n\n`;
+
+        // --- SECCIÓN ADMINS (Solo visible si sos Admin) ---
+        if (esAdmin) {
+            respuesta += `👮‍♂️ *COMISIÓN DIRECTIVA (Solo Admins)*\n`;
+            respuesta += `• \`/start [N]\` » Inicia/Configura el partido (Ej: /start 10).\n`;
+            respuesta += `• \`/equipos\` » Arma los equipos automáticamente (A vs B).\n`;
+            respuesta += `• \`/agendar Nombre\` » Anota a un jugador manualmente.\n`;
+            respuesta += `• \`/sacar Nombre\` » Baja a un jugador (sube reserva auto).\n`;
+            respuesta += `• \`/vip ID\` » Da prioridad a un usuario para la próxima.\n`;
+            respuesta += `• \`/force_cierre\` » Cierra la lista y sube reservas ya.\n`;
+            respuesta += `• \`/reset\` » ⚠️ Borra todo y reinicia el ciclo.\n`;
+        } else {
+            respuesta += `_Si querés gestionar el partido, ganá las elecciones (o pedile admin al dueño del grupo)._`;
+        }
+
+        bot.sendMessage(chatId, respuesta, { parse_mode: 'Markdown' });
     });
 
 };
