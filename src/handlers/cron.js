@@ -19,8 +19,16 @@ const config = require('../config');
 const TIMEZONE = "America/Argentina/Buenos_Aires";
 
 module.exports = () => {
+
+    // Si NO estamos en producción, no activamos los cronómetros automáticos
+    if (!config.IS_PROD) {
+        console.log("🚧 MODO DEV: Cron Jobs automáticos DESACTIVADOS para evitar spam.");
+        console.log("💡 Tip: Usa comandos manuales o /force_cierre para probar.");
+        return;
+    }
+
     // '0 18 * * 6' -> 18:00 hs todos los sábados se hace el cierre de listas y subida de reservas
-    cron.schedule('37 18 * * *', () => {
+    cron.schedule('0 18 * * 6', () => {
         const datos = State.get();
         State.setListaCerrada(true);
 
