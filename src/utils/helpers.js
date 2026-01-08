@@ -5,7 +5,7 @@ const config = require('../config');
 const Helpers = {
     esAdmin: async (chatId, userId) => {
         try {
-            const admins = await bot.getChatAdministrators(chatId);
+            const admins = await bot.getChatAdministrators(chatId); // Obtener lista de administradores del chat
             return admins.some(a => a.user.id === userId);
         } catch (e) { return false; }
     },
